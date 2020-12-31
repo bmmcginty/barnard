@@ -72,7 +72,7 @@ Our thanks go out to Tim Cooper for the massive amount of work put into this cli
 
 ## Config
 
-By default, the file $HOME/.barnard.yaml will hold the configuration for Barnard.
+By default, the file ${XDG_CONFIG_HOME:-${HOME}/.config}/barnard/config.yaml will hold the configuration for Barnard.
 You can have barnard read another file by using the -c option, like `./barnard -c ~/.anotherbarnard.yaml`.
 It will be created automatically if it doesn't exist.
 If you modify the config file while Barnard is running, your changes may be overwritten.
@@ -117,7 +117,7 @@ If Jim's volume is set to 0.1, and larry's volume is set to 0.9, lowering the ch
 
 You can change the volume for a user once that user has spoken at least once during a session.
 Attempts to change the volume of a user who has not spoken will be ignored.
-If you are unable to hear a user speaking, you can edit the .barnard.yaml file in your home directory, after closing Barnard, and set the volume parameter to 1.0 for a particular user.
+If you are unable to hear a user speaking, you can edit the barnard.yaml file, after closing Barnard, and set the volume parameter to 1.0 for a particular user.
 
 ### Technical
 
@@ -152,6 +152,11 @@ To fetch and build:
     go get -u github.com/bmmcginty/barnard
 
 After running the command above, `barnard` will be compiled as `$(go env GOPATH)/bin/barnard`.
+
+To build locally:
+
+    go get -v .
+    go build -v ./*.go
 
 ## Manual
 

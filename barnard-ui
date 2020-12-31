@@ -129,7 +129,13 @@ connect() {
     if [[ -z "$serverName" || "$serverName" == "Go Back" ]]; then
         return
     fi
-    local username="$(grep '^username: .*$' ~/.barnard.yaml 2> /dev/null | cut -d ' ' -f2-)"
+    local xdg_yaml=${XDG_CONFIG_HOME:-${HOME}/.config}/barnard/config.yaml
+    local old_yaml=$HOME/.barnard.yaml
+    local yaml
+    test -f "$old_yaml" && yaml="$old_yaml" # if we only have an old config, use that
+    test -f "$xdg_yaml" && yaml="$xdg_yaml" # always use xdg_yaml if there is one
+    test -z "$yaml" && yaml="$xdg_yaml" # if there are no config files, use xdg_yaml
+    local username="$(grep '^username: .*$' $yaml 2> /dev/null | cut -d ' ' -f2-)"
     username="${username//[[:space:]]/_}"
     username="${username//\"/}"
     command barnard -username "${username:-${USER}-${HOSTNAME}}" -server ${mumbleServerList[$serverName]} --fifo ~/.config/barnard/cmd --buffers 16 |& log
