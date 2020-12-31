@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/bmmcginty/barnard/uiterm"
 	"gopkg.in/yaml.v2"
-	//	"encoding/yaml"
 	"github.com/bmmcginty/barnard/gumble/gumble"
 	"io/ioutil"
 	"os"
@@ -236,18 +235,14 @@ func fileExists(path string) bool {
 }
 
 func resolvePath(path string) string {
-	if strings.HasPrefix(path, "~/") || strings.Contains(path, "$HOME") {
+	if strings.HasPrefix(path, "~/") {
 		usr, err := user.Current()
 		if err != nil {
 			panic(err)
 		}
-		var hd = usr.HomeDir
-		if strings.Contains(path, "$HOME") {
-			path = strings.Replace(path, "$HOME", hd, 1)
-		} else {
-			path = strings.Replace(path, "~", hd, 1)
-		}
-	}
+    path = strings.Replace(path, "~", usr.HomeDir, 1)
+  }
+
 	return path
 }
 

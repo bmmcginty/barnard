@@ -3,7 +3,12 @@ package main
 import _ "net/http/pprof"
 import (
 	"bufio"
+	"crypto/tls"
+	"flag"
 	"fmt"
+	"github.com/adrg/xdg"
+	"github.com/alessio/shellescape"
+	"github.com/bmmcginty/barnard/config"
 	"io"
 	"log"
 	"net/http"
@@ -11,12 +16,6 @@ import (
 	"os/exec"
 	"strings"
 	"syscall"
-	//"gopkg.in/alessio/shellescape.v1"
-	//"github.com/google/shlex"
-	"crypto/tls"
-	"flag"
-	"github.com/alessio/shellescape"
-	"github.com/bmmcginty/barnard/config"
 
 	"github.com/bmmcginty/barnard/gumble/gumble"
 	_ "github.com/bmmcginty/barnard/gumble/opus"
@@ -100,13 +99,19 @@ func setup_fifo(fn string) (chan string, error) {
 }
 
 func main() {
+	configFilePath, err := xdg.ConfigFile("barnard/config.yaml")
+	if err != nil {
+		configFilePath = "~/.barnard.yaml"
+		log.Fatal(err)
+	}
+
 	// Command line flags
 	server := flag.String("server", "localhost:64738", "the server to connect to")
 	username := flag.String("username", "", "the username of the client")
 	password := flag.String("password", "", "the password of the server")
 	insecure := flag.Bool("insecure", false, "skip server certificate verification")
 	certificate := flag.String("certificate", "", "PEM encoded certificate and private key")
-	cfgfn := flag.String("config", "~/.barnard.yaml", "Path to YAML formatted configuration file")
+	cfgfn := flag.String("config", configFilePath, "Path to YAML formatted configuration file")
 	list_devices := flag.Bool("list_devices", false, "do not connect; instead, list available audio devices and exit")
 	fifo := flag.String("fifo", "", "path of a FIFO from which to read commands")
 	serverSet := false
