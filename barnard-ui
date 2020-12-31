@@ -132,9 +132,9 @@ connect() {
     local xdg_yaml=${XDG_CONFIG_HOME:-${HOME}/.config}/barnard/config.yaml
     local old_yaml=$HOME/.barnard.yaml
     local yaml
-    test -f "$old_yaml" && yaml="$old_yaml" # if we only have an old config, use that
-    test -f "$xdg_yaml" && yaml="$xdg_yaml" # always use xdg_yaml if there is one
-    test -z "$yaml" && yaml="$xdg_yaml" # if there are no config files, use xdg_yaml
+    test -f "$old_yaml" && yaml="$old_yaml" # use existing old config
+    test -f "$xdg_yaml" && yaml="$xdg_yaml" # use existing new config over existing old config
+    test -z "$yaml" && yaml="$xdg_yaml"     # default to new config
     local username="$(grep '^username: .*$' $yaml 2> /dev/null | cut -d ' ' -f2-)"
     username="${username//[[:space:]]/_}"
     username="${username//\"/}"
